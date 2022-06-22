@@ -1,0 +1,12 @@
+.App {
+  text-align: center;
+}
+.btn{
+  color: azure;
+  background-color: green;
+  width: 100px;
+  height: 30px;
+}
+.render-chat{
+  display: flex;
+}
