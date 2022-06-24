@@ -1,48 +1,102 @@
 import React, { useEffect, useState } from "react";
-import { TextField } from "@mui/material";
+import { TextField,Box} from "@mui/material";
 import io from "socket.io-client";
-const socket = io.connect("http://192.168.1.125:5000");
-export const ChatPage = () => {
-  const [msg, setMsg] = useState("");
-  const [chat, setChat] = useState([]);
+import { Container } from "@mui/system";
+import "../App.css";
 
-  socket.on("send", (msg) => {
-    setChat([...chat, msg]);
-    // console.log(msg);
-  });
+ const socket = io.connect("http://192.168.1.125:5000");
+export const ChatPage = ({  username, room }) => {
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [messageList, setMessageList] = useState([]);
+  
+  // socket.on("receive_message", (data) => {
+  //   setMessageList((list) => [...list, data]);
+  // })
+
+  const sendMessage = async () => {
+    if (currentMessage !== "") {
+      const messageData = {
+        room: room,
+        author: username,
+        message: currentMessage,
+       
+      };
+
+      await socket.emit("send_message", messageData);
+      setMessageList((list) => [...list, messageData]);
+      setCurrentMessage("");
+    }
+  };
 
   useEffect(() => {
-    socket.on("message", (msg) => {
-      setChat([...chat, msg]);
+    socket.on("receive_message", (data) => {
+      // setMessageList((list) => [...list, data]);
+      console.log("hi")
     });
-  }, [chat]);
+  }, [socket]);
 
-  const onSubmitMessage = (e) => {
-    e.preventDefault();
-    socket.emit("message", msg);
-    console.log(msg);
-    setChat([...chat, msg]);
-  };
-  return (
-    <div>
-      <h1>Chat log</h1>
-      {chat.map((msg, index) => {
-        return <p key={index}>{msg}</p>;
-      })}
+ 
 
-      <form onSubmit={onSubmitMessage}>
-        <TextField
+  // socket.on("send", (msg) => {
+  //   setChat([...chat, msg]);
+  //   // console.log(msg);
+  // });
+
+//   useEffect(() => {
+//     socket.on("message", (msg) => {
+//       setChat([...chat, msg]);
+//     });
+//   }, [chat]);
+
+//   const onSubmitMessage = (e) => {
+//     e.preventDefault();
+//     socket.emit("join_room", msg);
+//     console.log(msg);
+//     setChat([...chat, msg]);
+//  };
+
+
+ 
+return (
+<div className="chat-window">
+      <div className="chat-header">
+        <p>Live Chat</p>
+      </div>
+      <div className="chat-body">
+        <div className="message-container">
+          {messageList.map((messageContent) => {
+            return (
+              <div
+                className="message"
+                id={username === messageContent.author ? "you" : "other"}
+              >
+                <div>
+                  <div className="message-content">
+                    <p>{messageContent.message}</p>
+                  </div>
+                  <div className="message-meta">
+                    
+                    <p id="author">{messageContent.author}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div className="chat-footer">
+      <TextField
           label="message"
-          name="msg"
-          value={msg}
+          name="currentMessage"
+          value={currentMessage}
+          size="small"
           onChange={(e) => {
-            setMsg(e.target.value);
+            setCurrentMessage(e.target.value);
           }}
+        
         />
-        <br />
-        <br />
-        <button className="btn">Submit</button>
-      </form>
+        <button type="submit" onClick={sendMessage}>send</button>
+      </div>
     </div>
   );
-};
+}
