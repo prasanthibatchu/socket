@@ -1,0 +1,22 @@
+[
+    {
+        "id":1,
+        "name":"Vijayawada"
+    },
+    {
+        "id":2,
+        "name":"Hyderabad"
+    },
+    {
+        "id":3,
+        "name":"Vijayanagaram"
+    },
+    {
+        "id":4,
+        "name":"Guntur"
+    },
+    {
+        "id":5,
+        "name":"Vizag"
+    }
+]

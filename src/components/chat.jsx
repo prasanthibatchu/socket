@@ -19,18 +19,25 @@ export const ChatPage = ({  username, room }) => {
         room: room,
         author: username,
         message: currentMessage,
-       
+        time:
+        new Date(Date.now()).getHours() +
+        ":" +
+        new Date(Date.now()).getMinutes(),
       };
 
-      await socket.emit("send_message", messageData);
+      await socket.emit("receive_message", messageData);
       setMessageList((list) => [...list, messageData]);
       setCurrentMessage("");
     }
   };
-
+  socket.on("receive_message", (data) => { //reciever
+    setMessageList((list) => [...list, data]);
+    console.log("hi")
+  });
+  
   useEffect(() => {
-    socket.on("receive_message", (data) => {
-      // setMessageList((list) => [...list, data]);
+    socket.emit("send_message", (data) => { //sender
+      setMessageList((list) => [...list, data]);
       console.log("hi")
     });
   }, [socket]);
@@ -75,7 +82,7 @@ return (
                     <p>{messageContent.message}</p>
                   </div>
                   <div className="message-meta">
-                    
+                  <p id="time">{messageContent.time}</p>
                     <p id="author">{messageContent.author}</p>
                   </div>
                 </div>

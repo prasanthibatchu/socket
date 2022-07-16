@@ -6,18 +6,18 @@ import { Logout } from "./components/logout";
 import { UserContext } from "./components/context";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
-  const [userProfile, setUserProfile] = useState(null);
-  useEffect(() => {
-    var localdata = localStorage.getItem("name");
-    if (localdata != null) {
-      setUserProfile({ name: localStorage.getItem("name") });
-    }
-  }, []);
+  // const [userProfile, setUserProfile] = useState(null);
+  // useEffect(() => {
+  //   var localdata = localStorage.getItem("name");
+  //   if (localdata != null) {
+  //     setUserProfile({ name: localStorage.getItem("name") });
+  //   }
+  // }, []);
   return (
     <div className="App">
       <h1>Socket IO</h1> 
-      <UserContext.Provider value={{ userProfile, setUserProfile }}>
-      
+      {/* <UserContext.Provider value={{ userProfile, setUserProfile }}>
+       */}
         <Router>
           
 
@@ -28,7 +28,7 @@ function App() {
             <Route path="/logout" element={<Logout />} />
           </Routes>
         </Router>
-      </UserContext.Provider>
+      {/* </UserContext.Provider> */}
     </div>
   );
 }
